@@ -1,0 +1,76 @@
+// content.js
+//var firstHref = $("a[href^='http']").eq(0).attr("href");
+
+/*
+var state = false;
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if( request.message === "clicked_browser_action" ) {
+       // var firstHref = $("a[href^='http']").eq(0).attr("href");
+       
+       // console.log(firstHref);
+       if(this.state){
+        this.state = false;
+        console.log("marked true");
+        $("p").show();
+       }else{
+        this.state = true;
+        console.log("marked false");
+        $("p").hide();
+       }
+      
+      }
+    }
+  );
+  */
+
+
+ /*chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if( request.message === "clicked_browser_action" ) {
+      var firstHref = $("a[href^='http']").eq(0).attr("href");
+
+      console.log(firstHref);
+
+      // This line is new!
+      chrome.runtime.sendMessage({"message": "open_new_tab", "url": firstHref});
+    }
+  }
+);*/
+$(function() {
+console.log("Doc ready called");
+var div=document.createElement("div"); 
+document.body.appendChild(div); 
+div.innerText="test123";
+
+
+document.addEventListener("keydown", keyDownTextField, false);
+});
+
+function keyDownTextField(e) {
+  var keyCode = e.keyCode;
+  if(e.shiftKey) {
+    $.getJSON(
+      'https://en.wikipedia.org/w/api.php?action=query&list=search&utf8=&format=json' +
+      '&origin=*' + // <-- this is the magic ingredient!
+      '&srsearch='+document.getSelection().toString(), function(data){ alert(data.query.search[0].snippet) }
+    );
+    } else {
+  //alert("NO");
+  }
+}
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if( request.message === "clicked_browser_action" ) {
+     console.log('working');
+     $.getJSON(
+      'https://en.wikipedia.org/w/api.php?action=query&list=search&utf8=&format=json' +
+      '&origin=*' + // <-- this is the magic ingredient!
+      '&srsearch=Engineer', function(data){ alert(data.query.search[0].snippet) }
+    );
+    console.log("At end of function");
+      
+    }
+  }
+);
