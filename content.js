@@ -34,7 +34,25 @@ $(document).on({
             top: cr[0].top+ pageYOffset -$('#popup').outerHeight(),
             left: cr[0].left+ pageXOffset
           })
-          .show();
+          console.log("outerWidth "+$('#popup').outerWidth());
+          console.log("Inner width " +window.innerWidth);
+          var popupX = cr[0].left+ pageXOffset;
+          var popupY = cr[0].top+ pageYOffset -$('#popup').outerHeight();   
+          if((popupX+$('#popup').outerWidth())<window.innerWidth){
+            $('#popup')
+          .text(desc)
+          .css({
+            top: cr[0].top+ pageYOffset -$('#popup').outerHeight(),
+            left: cr[0].left+ pageXOffset
+          }).show();
+          }else{
+            $('#popup')
+          .text(desc)
+          .css({
+            top: cr[0].top+ pageYOffset -$('#popup').outerHeight(),
+            left: cr[0].right+ pageXOffset -$('#popup').outerWidth()
+          }).show();
+          }
         break;
       }
     }
