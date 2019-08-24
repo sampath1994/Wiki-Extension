@@ -4,7 +4,7 @@ console.log("Doc ready called");
 var div=document.createElement("div");
 div.setAttribute("id","popup"); 
 document.body.appendChild(div); 
-//div.innerText="test123";
+
 //////////////////////////////
 var cr= [];
 var desc = "";
@@ -14,13 +14,30 @@ $(document).on({
   'mouseup': function() {
     cr= [];
     cr= window.getSelection().getRangeAt(0).getClientRects();
+    var pgid;
+    var full_link;
     //console.log("Mouse up!");
     //console.log(cr);
     $.getJSON(
       'https://en.wikipedia.org/w/api.php?action=query&list=search&utf8=&format=json' +
       '&origin=*' + // <-- this is the magic ingredient!
-      '&srsearch='+document.getSelection().toString(), function(data){ desc = data.query.search[0].snippet; }
+      '&srsearch='+document.getSelection().toString(), function(data){ desc = data.query.search[0].snippet;
+        pgid = data.query.search[0].pageid;
+        
+        $.getJSON(
+      'https://en.wikipedia.org/w/api.php?action=query&prop=info&inprop=url&format=json' +
+      '&origin=*' + // <-- this is the magic ingredient!
+      '&pageids='+pgid, function(data){ full_link = data.query.pages[pgid].fullurl; 
+      desc = desc+ "<a onmousedown=\"window.open('"+full_link+"', '_blank')\" style=\"color:yellow;\" href=\"#\" target=\"_blank\">...more</a>";
+      //newFunction(desc, cr); 
+    }
+        );
+
+      }
     );
+    
+    
+
   },
   'mousemove': function(ev) {
     for(var i = 0 ; i < cr.length ; i++) {
@@ -38,7 +55,7 @@ $(document).on({
    
   if (window.getSelection().toString()){
     $('#popup').mouseover(function(){
-      newFunction(desc, cr);
+     // newFunction(desc, cr);
       flag = true;
       //console.log("in popup!!");
     }).mouseleave(function(){
@@ -59,6 +76,7 @@ $(document).on({
 });
 
 function newFunction(desc, cr) {
+  //console.log(desc);
   $('#popup')
     .html(desc)
     .css({
