@@ -8,6 +8,7 @@ document.body.appendChild(div);
 //////////////////////////////
 var cr= [];
 var desc = "";
+var flag = false;
 $(document).on({
 
   'mouseup': function() {
@@ -23,42 +24,27 @@ $(document).on({
   },
   'mousemove': function(ev) {
     for(var i = 0 ; i < cr.length ; i++) {
+      if(!flag){
       $('#popup').text('').hide();
+      }
       if(ev.pageX>= cr[i].left+ pageXOffset && ev.pageX<= cr[i].right+ pageXOffset &&
          ev.pageY >= cr[i].top+ pageYOffset  && ev.pageY<= cr[i].bottom+ pageYOffset
         ) {
           //console.log("In Area!!");
-        $('#popup')
-          .text(desc)
-          .css({
-            top: cr[0].top+ pageYOffset -$('#popup').outerHeight(),
-            left: cr[0].left+ pageXOffset
-          })
-          console.log("outerWidth "+$('#popup').outerWidth());
-          console.log("Inner width " +window.innerWidth);
-          var popupX = cr[0].left+ pageXOffset;
-          var popupY = cr[0].top+ pageYOffset -$('#popup').outerHeight();   
-          if((popupX+$('#popup').outerWidth())<window.innerWidth){
-            $('#popup')
-          .text(desc)
-          .css({
-            top: cr[0].top+ pageYOffset -$('#popup').outerHeight(),
-            left: cr[0].left+ pageXOffset
-          }).show();
-          }else{
-            $('#popup')
-          .text(desc)
-          .css({
-            top: cr[0].top+ pageYOffset -$('#popup').outerHeight(),
-            left: cr[0].right+ pageXOffset -$('#popup').outerWidth()
-          }).show();
-          }
+        newFunction(desc, cr);
         break;
       }
     }
    
   if (window.getSelection().toString()){
-     //console.log("yessss");
+    $('#popup').mouseover(function(){
+      newFunction(desc, cr);
+      flag = true;
+      //console.log("in popup!!");
+    }).mouseleave(function(){
+      $('#popup').text('').hide();
+      flag = false;
+    });
     }else{
     cr = [];
     $('#popup').text('').hide();
@@ -72,7 +58,36 @@ $(document).on({
 //document.addEventListener("keydown", keyDownTextField, false);
 });
 
-function keyDownTextField(e) {
+function newFunction(desc, cr) {
+  $('#popup')
+    .html(desc)
+    .css({
+      top: cr[0].top + pageYOffset - $('#popup').outerHeight(),
+      left: cr[0].left + pageXOffset
+    });
+  //console.log("outerWidth " + $('#popup').outerWidth());
+  //console.log("Inner width " + window.innerWidth);
+  var popupX = cr[0].left + pageXOffset;
+  var popupY = cr[0].top + pageYOffset - $('#popup').outerHeight();
+  if ((popupX + $('#popup').outerWidth()) < window.innerWidth) {
+    $('#popup')
+      .html(desc)
+      .css({
+        top: cr[0].top + pageYOffset - $('#popup').outerHeight(),
+        left: cr[0].left + pageXOffset
+      }).show();
+  }
+  else {
+    $('#popup')
+      .html(desc)
+      .css({
+        top: cr[0].top + pageYOffset - $('#popup').outerHeight(),
+        left: cr[0].right + pageXOffset - $('#popup').outerWidth()
+      }).show();
+  }
+}
+
+/*function keyDownTextField(e) {
   var keyCode = e.keyCode;
   if(e.shiftKey) {
     $.getJSON(
@@ -83,7 +98,7 @@ function keyDownTextField(e) {
     } else {
   //alert("NO");
   }
-}
+}*/
 
 /*chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {

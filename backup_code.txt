@@ -74,3 +74,11 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
+
+
+
+//search from pageid
+
+https://en.wikipedia.org/w/api.php?action=query&prop=info&pageids=736&inprop=url
+
+https://en.wikipedia.org/w/api.php?action=query&prop=info&pageids=736&inprop=url&format=json
