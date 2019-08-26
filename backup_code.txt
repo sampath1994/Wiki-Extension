@@ -82,3 +82,16 @@ chrome.runtime.onMessage.addListener(
 https://en.wikipedia.org/w/api.php?action=query&prop=info&pageids=736&inprop=url
 
 https://en.wikipedia.org/w/api.php?action=query&prop=info&pageids=736&inprop=url&format=json
+
+
+<a href="https://www.w3schools.com/html/" target="_blank">(...more)</a>
+
+
+background.js/////////////
+chrome.browserAction.onClicked.addListener(function(tab) {
+    // Send a message to the active tab
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      var activeTab = tabs[0];
+      chrome.tabs.sendMessage(activeTab.id, {"message": "clicked_browser_action"});
+    });
+  });

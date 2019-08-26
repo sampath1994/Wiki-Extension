@@ -1,6 +1,16 @@
-
+var activated = true;
 $(function() {
 console.log("Doc ready called");
+
+chrome.storage.sync.get(['wiki_activate'], function(items) {
+  console.log('storage value' + items.wiki_activate);
+  if(items.wiki_activate === 'true'){
+    activated = true;
+  }else{
+    activated = false;
+  }
+});
+
 var div=document.createElement("div");
 div.setAttribute("id","popup"); 
 document.body.appendChild(div); 
@@ -12,6 +22,7 @@ var flag = false;
 $(document).on({
 
   'mouseup': function() {
+    if(activated){
     cr= [];
     cr= window.getSelection().getRangeAt(0).getClientRects();
     var pgid;
@@ -35,11 +46,10 @@ $(document).on({
 
       }
     );
-    
-    
-
+    }
   },
   'mousemove': function(ev) {
+    if(activated){
     for(var i = 0 ; i < cr.length ; i++) {
       if(!flag){
       $('#popup').text('').hide();
@@ -68,11 +78,13 @@ $(document).on({
     //console.log("Noooooooooo");
     } 
   }
+  }
 });
 
 /////////////////////////////
 
 //document.addEventListener("keydown", keyDownTextField, false);
+
 });
 
 function newFunction(desc, cr) {
@@ -118,17 +130,27 @@ function newFunction(desc, cr) {
   }
 }*/
 
-/*chrome.runtime.onMessage.addListener(
+chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "clicked_browser_action" ) {
-     console.log('working');
-     $.getJSON(
-      'https://en.wikipedia.org/w/api.php?action=query&list=search&utf8=&format=json' +
-      '&origin=*' + // <-- this is the magic ingredient!
-      '&srsearch=Engineer', function(data){ alert(data.query.search[0].snippet) }
-    );
-    console.log("At end of function");
+
+     
       
+    if(activated){
+      activated = false;
+      chrome.storage.sync.set({'wiki_activate': 'false'}, function() {
+        console.log('Value is set to false');
+      });
+      console.log("deactivated!");
+     }else{
+      activated = true;
+      chrome.storage.sync.set({'wiki_activate': 'true'}, function() {
+        console.log('Value is set to true');
+      });
+      console.log("activated!");
+     }
+
+
     }
   }
-);*/
+);
