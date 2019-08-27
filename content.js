@@ -132,25 +132,12 @@ function newFunction(desc, cr) {
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if( request.message === "clicked_browser_action" ) {
-
-     
-      
-    if(activated){
-      activated = false;
-      chrome.storage.sync.set({'wiki_activate': 'false'}, function() {
-        console.log('Value is set to false');
-      });
-      console.log("deactivated!");
-     }else{
+    if( request.message === "clicked_browser_action_activate" ) {
       activated = true;
-      chrome.storage.sync.set({'wiki_activate': 'true'}, function() {
-        console.log('Value is set to true');
-      });
       console.log("activated!");
-     }
-
-
+    }else{
+      activated = false;
+      console.log("deactivated!");
     }
   }
 );
